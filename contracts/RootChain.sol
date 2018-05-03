@@ -1,11 +1,11 @@
-pragma solidity 0.4.18;
+pragma solidity 0.4.23;
 
-import 'SafeMath.sol';
-import 'Math.sol';
-import 'RLP.sol';
-import 'Merkle.sol';
-import 'Validate.sol';
-import 'PriorityQueue.sol';
+import './SafeMath.sol';
+import './Math.sol';
+import './RLP.sol';
+import './Merkle.sol';
+import './Validate.sol';
+import './PriorityQueue.sol';
 
 
 /**
