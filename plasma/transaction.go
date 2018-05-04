@@ -44,45 +44,59 @@ type Transaction struct {
 
 func NewTransaction(blockNum1, txIndex1, outputIndex1, blockNum2, txIndex2, outputIndex2, amount1, amount2, fee *big.Int, newOwner1, newOwner2 *common.Address) *Transaction {
 	return &Transaction{
-		BlockNum1: blockNum1,
-		TxIndex1: txIndex1,
-		OutputIndex1: outputIndex1,
-		Sig1: nil,
-		BlockNum2: blockNum2,
-		TxIndex2: txIndex2,
-		OutputIndex2: outputIndex2,
-		Sig2: nil,
-		NewOwner1: newOwner1,
-		Amount1: amount1,
-		NewOwner2: newOwner2,
-		Amount2: amount2,
-		Fee: fee,
+		BlockNum1:     blockNum1,
+		TxIndex1:      txIndex1,
+		OutputIndex1:  outputIndex1,
+		Sig1:          nil,
+		BlockNum2:     blockNum2,
+		TxIndex2:      txIndex2,
+		OutputIndex2:  outputIndex2,
+		Sig2:          nil,
+		NewOwner1:     newOwner1,
+		Amount1:       amount1,
+		NewOwner2:     newOwner2,
+		Amount2:       amount2,
+		Fee:           fee,
 		Confirmation1: false,
 		Confirmation2: false,
-		Spent1: false,
-		Spent2: false
+		Spent1:        false,
+		Spent2:        false,
 	}
 }
 
 // Hash hashes transaction in sha3(rlp.encode(tx)) format.
-func (tx *Transaction) Hash() (h common.Hash) {
+func (tx *Transaction) Hash() (common.Hash, error) {
 	return rlpHash(tx)
 }
 
 // GetSender1 returns the address of sender 1 in tx
 func (tx *Transaction) GetSender1() (common.Address, error) {
-	return getSender(tx.Hash().Bytes(), tx.Sig1)
+	h, err := tx.Hash()
+	if err != nil {
+		return common.HexToAddress(""), err
+	}
+
+	return getSender(h.Bytes(), tx.Sig1)
 }
 
 // GetSender2 returns the address of sender 2 in tx
 func (tx *Transaction) GetSender2() (common.Address, error) {
-	return getSender(tx.Hash.Bytes(), tx.Sig2)
+	h, err := tx.Hash()
+	if err != nil {
+		return common.HexToAddress(""), err
+	}
+
+	return getSender(h.Bytes(), tx.Sig2)
 }
 
 // Sign1 signs tx and pass it to sig1 in tx
-func (tx *Transaction) Sign1(prvKey ecdsa.PrivateKey) error {
-	sig, err := crypto.Sign(tx.Hash().Bytes(), prvKey)
+func (tx *Transaction) Sign1(prvKey *ecdsa.PrivateKey) error {
+	h, err := tx.Hash()
+	if err != nil {
+		return err
+	}
 
+	sig, err := crypto.Sign(h.Bytes(), prvKey)
 	if err != nil {
 		return err
 	}
@@ -92,9 +106,13 @@ func (tx *Transaction) Sign1(prvKey ecdsa.PrivateKey) error {
 }
 
 // Sign2 signs tx and pass it to sig2 in tx
-func (tx *Transaction) Sign2(prv ecdsa.PrivateKey) error {
-	sig, err := crypto.Sign(tx.Hash().Bytes(), prv)
+func (tx *Transaction) Sign2(prv *ecdsa.PrivateKey) error {
+	h, err := tx.Hash()
+	if err != nil {
+		return err
+	}
 
+	sig, err := crypto.Sign(h.Bytes(), prv)
 	if err != nil {
 		return err
 	}
@@ -105,18 +123,13 @@ func (tx *Transaction) Sign2(prv ecdsa.PrivateKey) error {
 
 // IsSingleUTXO returns if the tx conrains single UTXO.
 func (tx *Transaction) IsSingleUTXO() bool {
-	if tx.BlockNum2.Comp(big.NewInt(0)) == 0 {
-		return true
-	} else {
-		return false
-	}
+	return tx.BlockNum2.Cmp(big.NewInt(0)) == 0
 }
 
 // getSender returns the address of sender, in this case, address of public key
 // of private key used to sign sig.
 func getSender(hash []byte, sig []byte) (common.Address, error) {
 	pubKeyBytes, err := crypto.Ecrecover(hash, sig)
-
 	if err != nil {
 		return common.Address{}, err
 	}
@@ -126,9 +139,14 @@ func getSender(hash []byte, sig []byte) (common.Address, error) {
 }
 
 // rlpHash returns the hash of rlp-encoded value of x.
-func rlpHash(x interface{}) (h common.Hash) {
+func rlpHash(x interface{}) (common.Hash, error) {
 	w := sha3.NewKeccak256()
-	rlp.Encode(w, x)
+	err := rlp.Encode(w, x)
+	if err != nil {
+		return common.HexToHash(""), nil
+	}
+
+	var h common.Hash
 	w.Sum(h[:0])
-	return h
+	return h, nil
 }
