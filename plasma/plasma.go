@@ -2,6 +2,7 @@ package plasma
 
 import (
 	"context"
+	"math/big"
 
 	"github.com/ethereum/go-ethereum/accounts/abi/bind"
 	"github.com/ethereum/go-ethereum/common"
@@ -19,9 +20,10 @@ type Plasma struct {
 
 // NewPlasma creates a new instance of Plasma.
 func NewPlasma(contractAddr common.Address) *Plasma {
+	trs := make(map[*big.Int]Block)
 	return &Plasma{
 		contractAddr: contractAddr,
-		childChain:   NewChildChain(),
+		childChain:   NewChildChain(trs),
 	}
 }
 
