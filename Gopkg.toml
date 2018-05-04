@@ -32,3 +32,8 @@
 [[constraint]]
   name = "github.com/ethereum/go-ethereum"
   version = "1.8.7"
+
+[[prune.project]]
+  name = "github.com/ethereum/go-ethereum"
+  non-go = false
+  unused-packages = false

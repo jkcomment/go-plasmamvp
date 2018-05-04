@@ -19,6 +19,7 @@
     ".",
     "accounts",
     "accounts/abi",
+    "accounts/abi/bind",
     "accounts/keystore",
     "common",
     "common/hexutil",
@@ -93,16 +94,6 @@
   revision = "ae970a0732be3a1f5311da86118d37b9f4bd2a5a"
 
 [[projects]]
-  name = "github.com/yuzushioh/go-ethereum"
-  packages = [
-    "accounts/abi",
-    "accounts/abi/bind",
-    "event"
-  ]
-  revision = "cf87713dd42162861b7ed227f79f0638a33571df"
-  version = "v1.6.5"
-
-[[projects]]
   branch = "master"
   name = "golang.org/x/crypto"
   packages = [
@@ -154,6 +145,6 @@
 [solve-meta]
   analyzer-name = "dep"
   analyzer-version = 1
-  inputs-digest = "04e4023f5247cf9952ee40d81fec9409c6344250d31e05293b22c4e301aea237"
+  inputs-digest = "7b64d9a1cda62e03fb85d3b25905a0ccb252eece462cbcef43d5c0c892a2d9d5"
   solver-name = "gps-cdcl"
   solver-version = 1
