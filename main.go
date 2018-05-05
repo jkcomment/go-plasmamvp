@@ -17,8 +17,8 @@ func main() {
 	}
 
 	if len(os.Args) != 2 {
-		fmt.Fprintf(os.Stdout, "specify private key")
-		return
+		fmt.Fprintf(os.Stderr, "specify private key")
+		os.Exit(1)
 	}
 
 	prvkey := os.Args[1]
@@ -28,7 +28,7 @@ func main() {
 	addr, err := deployer.Deploy(contract.RootChainABI, contract.RootChainBin)
 	if err != nil {
 		fmt.Fprintf(os.Stderr, err.Error())
-		return
+		os.Exit(1)
 	}
 
 	fmt.Println(addr.String())
