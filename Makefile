@@ -1,8 +1,10 @@
+CMDDIR="cmd/plasma"
+
 build:
-	go build cmd/plasma/*.go
+	cd $(CMDDIR) && go build
 
 install:
-	go install cmd/plasma
+	cd $(CMDDIR) && go install
 
 clean:
-	rm -f cmd/plasma/plasma
+	cd $(CMDDIR) && go clean
