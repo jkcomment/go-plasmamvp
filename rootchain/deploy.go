@@ -18,8 +18,10 @@ type Deploy struct {
 }
 
 // NewDeploy creates Deployer
-func NewDeploy() *Deploy {
-	return &Deploy{}
+func NewDeploy(prvkeyHex string) *Deploy {
+	return &Deploy{
+		auth: setPrvKey(prvkeyHex),
+	}
 }
 
 // Dial creates ethclient with specified URL
@@ -30,13 +32,6 @@ func (d *Deploy) Dial(rawURL string) error {
 	}
 	d.con = con
 	return nil
-}
-
-// SetPrvKey creates keyed-transactor with specified private key.
-func (d *Deploy) SetPrvKey(keyHex string) {
-	keyBytes := common.FromHex(keyHex)
-	key := crypto.ToECDSAUnsafe(keyBytes)
-	d.auth = bind.NewKeyedTransactor(key)
 }
 
 // Deploy deploys smart contract with given abi and bin
@@ -65,4 +60,11 @@ func (d *Deploy) Deploy(contractAbi, contractBin string) (*common.Address, error
 	}
 
 	return &address, nil
+}
+
+// SetPrvKey creates keyed-transactor with specified private key.
+func setPrvKey(prvkeyHex string) *bind.TransactOpts {
+	keyBytes := common.FromHex(prvkeyHex)
+	key := crypto.ToECDSAUnsafe(keyBytes)
+	return bind.NewKeyedTransactor(key)
 }

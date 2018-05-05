@@ -9,23 +9,20 @@ import (
 )
 
 func main() {
-	deployer := rootchain.NewDeploy()
-
-	if err := deployer.Dial("http://localhost:8545"); err != nil {
-		fmt.Fprintf(os.Stderr, err.Error())
-		return
-	}
-
 	if len(os.Args) != 2 {
 		fmt.Fprintf(os.Stderr, "specify private key")
 		os.Exit(1)
 	}
 
 	prvkey := os.Args[1]
+	deploy := rootchain.NewDeploy(prvkey)
 
-	deployer.SetPrvKey(prvkey)
+	if err := deploy.Dial("http://localhost:8545"); err != nil {
+		fmt.Fprintf(os.Stderr, err.Error())
+		return
+	}
 
-	addr, err := deployer.Deploy(contract.RootChainABI, contract.RootChainBin)
+	addr, err := deploy.Deploy(contract.RootChainABI, contract.RootChainBin)
 	if err != nil {
 		fmt.Fprintf(os.Stderr, err.Error())
 		os.Exit(1)
