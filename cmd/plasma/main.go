@@ -1,10 +1,14 @@
 package main
 
 import (
+	"context"
 	"fmt"
+	"math/big"
 	"os"
+	"strconv"
 
 	"github.com/pkg/errors"
+	"github.com/yuzushioh/go-plasmamvp/client"
 	"github.com/yuzushioh/go-plasmamvp/rootchain"
 	contract "github.com/yuzushioh/go-plasmamvp/rootchain/contracts"
 )
@@ -43,19 +47,39 @@ func run() error {
 		fmt.Println(addr.String())
 	case "deposit":
 		contAddr := os.Getenv("CONTRACT_ADDRESS")
-		if  contAddr == "" {
+		prvKey := os.Getenv("PRIVATE_KEY")
+
+		if contAddr == "" {
 			return errors.New("exec following command before plasma deposit: export CONTRACT_ADDRESS=$(plasma deploy [Private Key])")
 		}
 		fmt.Printf("CONTRACT_ADDRESS: %s\n", contAddr)
 
-		if len(os.Args) != 4 {
-			return errors.New("usage: plasma deposit [ADDRESS] [AMOUNT]")
+		if prvKey == "" {
+			return errors.New("exec following command before plasma deposit: export PRIVATE_KEY=[Private Key]")
+		}
+		fmt.Printf("PRIVATE_KEY: %s\n", prvKey)
+
+		if len(os.Args) != 3 {
+			return errors.New("usage: plasma deposit [AMOUNT]")
 		}
 
-		addr:= os.Args[2]
-		amt := os.Args[3]
-		// TODO: use deposit
-		fmt.Printf("address: %s, amount: %s\n",addr,amt)
+		client, err := client.New("http://localhost:8545", contAddr, prvKey)
+		if err != nil {
+			return err
+		}
+
+		value, err := strconv.Atoi(os.Args[2])
+		if err != nil {
+			return err
+		}
+
+		tx, err := client.Deposit(context.Background(), big.NewInt(int64(value)))
+		if err != nil {
+			return err
+		}
+
+		fmt.Println(tx)
+
 	default:
 		return errors.Errorf("does not support %q", os.Args[1])
 	}

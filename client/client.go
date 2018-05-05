@@ -8,33 +8,45 @@ import (
 	"github.com/ethereum/go-ethereum/common"
 	"github.com/ethereum/go-ethereum/core/types"
 	"github.com/ethereum/go-ethereum/ethclient"
+	"github.com/yuzushioh/go-ethereum/crypto"
 	contract "github.com/yuzushioh/go-plasmamvp/rootchain/contracts"
 )
 
+// Client todo
 type Client struct {
 	RootChain *contract.RootChain
+	Auth      *bind.TransactOpts
 }
 
-func New(url, addr string) (*Client, error) {
+// New TODO
+func New(url, contAddr, prvKey string) (*Client, error) {
 	conn, err := ethclient.Dial(url)
 	if err != nil {
 		return nil, err
 	}
 
-	rc, err := contract.NewRootChain(common.HexToAddress(addr), conn)
+	rc, err := contract.NewRootChain(common.HexToAddress(contAddr), conn)
 	if err != nil {
 		return nil, err
 	}
 
-	return &Client{RootChain: rc}, nil
+	return &Client{
+			RootChain: rc,
+			Auth:      setPrvKey(prvKey),
+		},
+		nil
 }
 
-func (c *Client) Deposit(ctx context.Context, from common.Address, value *big.Int) (*types.Transaction, error) {
-	opts := &bind.TransactOpts{
-		From:    from,
-		Value:   value,
-		Context: ctx,
-	}
+// Deposit TODO
+func (c *Client) Deposit(ctx context.Context, value *big.Int) (*types.Transaction, error) {
+	c.Auth.Context = ctx
+	c.Auth.Value = value
+	return c.RootChain.Deposit(c.Auth)
+}
 
-	return c.RootChain.Deposit(opts)
+// SetPrvKey creates keyed-transactor with specified private key.
+func setPrvKey(prvkeyHex string) *bind.TransactOpts {
+	keyBytes := common.FromHex(prvkeyHex)
+	key := crypto.ToECDSAUnsafe(keyBytes)
+	return bind.NewKeyedTransactor(key)
 }
