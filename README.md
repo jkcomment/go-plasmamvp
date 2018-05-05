@@ -9,10 +9,11 @@ go get -u github.com/yuzushioh/go-plasmamvp/cmd/plasma
 ## Usage
 
 ```
-export CONTRACT_ADDRESS=$(plasma deploy [Private Key])
+export PRIVATE_KEY=[Private Key]
+export CONTRACT_ADDRESS=$(plasma deploy)
 
 # plasma deposit, submitblock and withdraw use CONTRACT_ADDRESS environment
-plasma deposit [ADDRESS] [AMOUNT]
+plasma deposit [AMOUNT]
 plasma submitblock ?
 plasma withdraw ?
 ```
