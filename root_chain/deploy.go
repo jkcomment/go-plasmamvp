@@ -15,11 +15,12 @@ func main() {
 		return
 	}
 
-	prvkey := os.Args[1]
-	if len(prvkey) > 1 {
-		fmt.Fprintf(os.Stdout, "private key is necessary for the deploy")
+	if len(os.Args) > 1 {
+		fmt.Fprintf(os.Stdout, "specify private key")
 		return
 	}
+
+	prvkey := os.Args[1]
 
 	deployer.SetPrvKey(prvkey)
 
