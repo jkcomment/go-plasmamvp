@@ -1,4 +1,4 @@
-package main
+package rootchain
 
 import (
 	"reflect"
@@ -11,19 +11,19 @@ import (
 	"github.com/ethereum/go-ethereum/ethclient"
 )
 
-// Deployer deploys smart contract with abi and bin
-type Deployer struct {
+// Deploy deploys smart contract with abi and bin
+type Deploy struct {
 	con  *ethclient.Client
 	auth *bind.TransactOpts
 }
 
-// NewDeployer creates Deployer
-func NewDeployer() *Deployer {
-	return &Deployer{}
+// NewDeploy creates Deployer
+func NewDeploy() *Deploy {
+	return &Deploy{}
 }
 
 // Dial creates ethclient with specified URL
-func (d *Deployer) Dial(rawURL string) error {
+func (d *Deploy) Dial(rawURL string) error {
 	con, err := ethclient.Dial(rawURL)
 	if err != nil {
 		return err
@@ -33,20 +33,20 @@ func (d *Deployer) Dial(rawURL string) error {
 }
 
 // SetPrvKey creates keyed-transactor with specified private key.
-func (d *Deployer) SetPrvKey(keyHex string) {
+func (d *Deploy) SetPrvKey(keyHex string) {
 	keyBytes := common.FromHex(keyHex)
 	key := crypto.ToECDSAUnsafe(keyBytes)
 	d.auth = bind.NewKeyedTransactor(key)
 }
 
 // Deploy deploys smart contract with given abi and bin
-func (d *Deployer) Deploy(contractAbi, contractBin string) (*common.Address, error) {
+func (d *Deploy) Deploy(contractAbi, contractBin string) (*common.Address, error) {
 	parsed, err := abi.JSON(strings.NewReader(contractAbi))
 	if err != nil {
 		return nil, err
 	}
 
-	var dataInputs = make([]interface{}, 0)
+	dataInputs := make([]interface{}, 0, len(parsed.Constructor.Inputs))
 
 	for _, i := range parsed.Constructor.Inputs {
 		t := reflect.Zero(i.Type.Type)
