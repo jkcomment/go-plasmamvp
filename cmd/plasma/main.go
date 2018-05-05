@@ -9,6 +9,7 @@ import (
 
 	"github.com/pkg/errors"
 	"github.com/yuzushioh/go-plasmamvp/client"
+	"github.com/yuzushioh/go-plasmamvp/lib"
 	"github.com/yuzushioh/go-plasmamvp/rootchain"
 	contract "github.com/yuzushioh/go-plasmamvp/rootchain/contracts"
 )
@@ -79,7 +80,7 @@ func run() error {
 			return err
 		}
 
-		fmt.Println(tx)
+		fmt.Println(lib.SprintTransaction(tx))
 
 	default:
 		return errors.Errorf("does not support %q", os.Args[1])

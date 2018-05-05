@@ -17,6 +17,7 @@ func SetPrvKey(prvkeyHex string) *bind.TransactOpts {
 	return bind.NewKeyedTransactor(key)
 }
 
+// SprintTransaction print Transaction fields
 func SprintTransaction(tx *types.Transaction) (string, error) {
 	txbody, err := tx.MarshalJSON()
 	if err != nil {
