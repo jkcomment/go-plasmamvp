@@ -100,6 +100,12 @@
   revision = "ae970a0732be3a1f5311da86118d37b9f4bd2a5a"
 
 [[projects]]
+  name = "github.com/yuzushioh/go-ethereum"
+  packages = ["crypto"]
+  revision = "cf87713dd42162861b7ed227f79f0638a33571df"
+  version = "v1.6.5"
+
+[[projects]]
   branch = "master"
   name = "golang.org/x/crypto"
   packages = [
@@ -151,6 +157,6 @@
 [solve-meta]
   analyzer-name = "dep"
   analyzer-version = 1
-  inputs-digest = "059686b20f4a3392024fc73c81cdd0bb83a61d5c81df7288e0f05e3248d20699"
+  inputs-digest = "ebaaca060e130f71485b8e2ce02b6a438e1ac20732ffe715f25a8c1dfff159ea"
   solver-name = "gps-cdcl"
   solver-version = 1

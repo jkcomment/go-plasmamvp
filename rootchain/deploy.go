@@ -7,8 +7,8 @@ import (
 	"github.com/ethereum/go-ethereum/accounts/abi"
 	"github.com/ethereum/go-ethereum/accounts/abi/bind"
 	"github.com/ethereum/go-ethereum/common"
-	"github.com/ethereum/go-ethereum/crypto"
 	"github.com/ethereum/go-ethereum/ethclient"
+	"github.com/yuzushioh/go-plasmamvp/lib"
 )
 
 // Deploy deploys smart contract with abi and bin
@@ -20,7 +20,7 @@ type Deploy struct {
 // NewDeploy creates Deployer
 func NewDeploy(prvkeyHex string) *Deploy {
 	return &Deploy{
-		auth: setPrvKey(prvkeyHex),
+		auth: lib.SetPrvKey(prvkeyHex),
 	}
 }
 
@@ -60,11 +60,4 @@ func (d *Deploy) Deploy(contractAbi, contractBin string) (*common.Address, error
 	}
 
 	return &address, nil
-}
-
-// SetPrvKey creates keyed-transactor with specified private key.
-func setPrvKey(prvkeyHex string) *bind.TransactOpts {
-	keyBytes := common.FromHex(prvkeyHex)
-	key := crypto.ToECDSAUnsafe(keyBytes)
-	return bind.NewKeyedTransactor(key)
 }
