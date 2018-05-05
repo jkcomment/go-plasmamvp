@@ -1,5 +1,8 @@
 build:
-	go build -o plasma
+	go build cmd/plasma/*.go
+
+install:
+	go install cmd/plasma
 
 clean:
-	rm -f plasma
+	rm -f cmd/plasma/plasma
