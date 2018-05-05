@@ -21,7 +21,8 @@ func run() error {
 		return errors.New("Specify a subcommand")
 	}
 
-	switch os.Args[1] {
+	subCmd := os.Args[1]
+	switch subCmd {
 	case "deploy":
 		if len(os.Args) != 3 {
 			return errors.New("Specify private key")
@@ -40,7 +41,21 @@ func run() error {
 		}
 
 		fmt.Println(addr.String())
+	case "deposit":
+		contAddr := os.Getenv("CONTRACT_ADDRESS")
+		if  contAddr == "" {
+			return errors.New("exec following command before plasma deposit: export CONTRACT_ADDRESS=$(plasma deploy [Private Key])")
+		}
+		fmt.Printf("CONTRACT_ADDRESS: %s\n", contAddr)
 
+		if len(os.Args) != 4 {
+			return errors.New("usage: plasma deposit [ADDRESS] [AMOUNT]")
+		}
+
+		addr:= os.Args[2]
+		amt := os.Args[3]
+		// TODO: use deposit
+		fmt.Printf("address: %s, amount: %s\n",addr,amt)
 	default:
 		return errors.Errorf("does not support %q", os.Args[1])
 	}
