@@ -1,6 +1,6 @@
 package plasma
 
-import contract "github.com/yuzushioh/go-plasmamvp/contracts"
+import "github.com/yuzushioh/go-plasmamvp/rootchain/contracts"
 
 // ChildChain TODO
 type ChildChain struct {
@@ -13,5 +13,9 @@ func NewChildChain() *ChildChain {
 
 // ApplyDeposit TODO
 func (cc *ChildChain) ApplyDeposit(deposit *contract.RootChainDeposit) {
+
+}
+
+func (cc *ChildChain) ApplyTransaction(tx *Transaction) error{
 
 }

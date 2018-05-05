@@ -3,14 +3,15 @@ package main
 import (
 	"context"
 	"fmt"
-	"math/big"
 	"os"
-	"strconv"
-
 	"github.com/pkg/errors"
 	"github.com/yuzushioh/go-plasmamvp/client"
 	"github.com/yuzushioh/go-plasmamvp/rootchain"
-	contract "github.com/yuzushioh/go-plasmamvp/rootchain/contracts"
+	"github.com/yuzushioh/go-plasmamvp/rootchain/contracts"
+	"github.com/yuzushioh/go-plasmamvp/childchain/plasma"
+	"github.com/ethereum/go-ethereum/common"
+	"github.com/yuzushioh/go-plasmamvp/lib"
+	"crypto/x509"
 )
 
 func main() {
@@ -69,17 +70,119 @@ func run() error {
 			return err
 		}
 
-		value, err := strconv.Atoi(os.Args[2])
+
+		amt := os.Args[2]
+		value, err := lib.StrToBigInt(amt)
 		if err != nil {
 			return err
 		}
 
-		tx, err := client.Deposit(context.Background(), big.NewInt(int64(value)))
+		tx, err := client.Deposit(context.Background(), value)
 		if err != nil {
 			return err
 		}
 
 		fmt.Println(tx)
+	case "sendtx":
+		if len(os.Args) != 3 {
+			return errors.New("usage: plasma sendtx <blknum1> <txindex1> <oindex1> <blknum2> <txindex2> <oindex2> <newowner1> <amount1> <newowner2> <amount2> <fee> <key1> [<key2>]")
+		}
+
+		bn1:= os.Args[2]
+		blockNum1, err := lib.StrToBigInt(bn1)
+		if err != nil {
+			return err
+		}
+
+		ti1:= os.Args[3]
+		txIndex1, err := lib.StrToBigInt(ti1)
+		if err != nil {
+			return err
+		}
+
+		oi1:= os.Args[4]
+		outputIndex1, err := lib.StrToBigInt(oi1)
+		if err != nil {
+			return err
+		}
+
+		bn2:= os.Args[5]
+		blockNum2, err := lib.StrToBigInt(bn2)
+		if err != nil {
+			return err
+		}
+
+		ti2:= os.Args[6]
+		txIndex2, err := lib.StrToBigInt(ti2)
+		if err != nil {
+			return err
+		}
+
+		oi2:= os.Args[7]
+		outputIndex2, err := lib.StrToBigInt(oi2)
+		if err != nil {
+			return err
+		}
+
+		no1 := os.Args[8]
+		newOwner1 := common.HexToAddress(no1)
+
+		am1:= os.Args[9]
+		amount1, err := lib.StrToBigInt(am1)
+		if err != nil {
+			return err
+		}
+
+		no2 := os.Args[10]
+		newOwner2 := common.HexToAddress(no2)
+
+		am2:= os.Args[11]
+		amount2, err := lib.StrToBigInt(am2)
+		if err != nil {
+			return err
+		}
+
+		f := os.Args[12]
+		fee, err := lib.StrToBigInt(f)
+		if err != nil {
+			return err
+		}
+
+		tx := plasma.NewTransaction(
+			blockNum1, txIndex1, outputIndex1,
+			blockNum2, txIndex2, outputIndex2,
+			amount1, amount2,
+			fee,
+			&newOwner1, &newOwner2,
+		)
+
+		k1 := os.Args[13]
+		if k1 != "" {
+			key1 ,err := x509.ParseECPrivateKey([]byte(k1))
+			if err != nil {
+				return err
+			}
+
+			tx.Sign1(key1)
+		}
+
+		k2 := os.Args[14]
+		if k2 != "" {
+			key2 ,err := x509.ParseECPrivateKey([]byte(k2))
+			if err != nil {
+				return err
+			}
+
+			tx.Sign2(key2)
+		}
+
+		fmt.Println(tx)
+
+		childChain := plasma.NewChildChain()
+		err = childChain.ApplyTransaction(tx)
+		if err != nil {
+			return err
+		}
 
 	default:
 		return errors.Errorf("does not support %q", os.Args[1])
