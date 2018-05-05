@@ -12,13 +12,13 @@ import (
 	contract "github.com/yuzushioh/go-plasmamvp/rootchain/contracts"
 )
 
-// Client todo
+// Client call api for RootChain
 type Client struct {
 	RootChain *contract.RootChain
 	Auth      *bind.TransactOpts
 }
 
-// New TODO
+// New create Client
 func New(url, contAddr, prvKey string) (*Client, error) {
 	conn, err := ethclient.Dial(url)
 	if err != nil {
@@ -37,7 +37,7 @@ func New(url, contAddr, prvKey string) (*Client, error) {
 		nil
 }
 
-// Deposit TODO
+// Deposit deposits against the root chain
 func (c *Client) Deposit(ctx context.Context, value *big.Int) (*types.Transaction, error) {
 	c.Auth.Context = ctx
 	c.Auth.Value = value
