@@ -29,15 +29,11 @@ func New(url, addr string) (*Client, error) {
 	return &Client{RootChain: rc}, nil
 }
 
-func (c *Client) Deposit(ctx context.Context, from common.Address, nonce, value, gasPrice *big.Int, signer bind.SignerFn, gasLimit uint64) (*types.Transaction, error) {
+func (c *Client) Deposit(ctx context.Context, from common.Address, value *big.Int) (*types.Transaction, error) {
 	opts := &bind.TransactOpts{
-		From:     from,
-		Nonce:    nonce,
-		Value:    value,
-		GasPrice: gasPrice,
-		Signer:   signer,
-		GasLimit: gasLimit,
-		Context:  ctx,
+		From:    from,
+		Value:   value,
+		Context: ctx,
 	}
 
 	return c.RootChain.Deposit(opts)
