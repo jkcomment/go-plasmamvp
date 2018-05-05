@@ -37,3 +37,7 @@
   name = "github.com/ethereum/go-ethereum"
   non-go = false
   unused-packages = false
+
+[[constraint]]
+  name = "github.com/pkg/errors"
+  version = "0.8.0"

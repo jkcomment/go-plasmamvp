@@ -4,29 +4,46 @@ import (
 	"fmt"
 	"os"
 
+	"github.com/pkg/errors"
 	"github.com/yuzushioh/go-plasmamvp/rootchain"
 	contract "github.com/yuzushioh/go-plasmamvp/rootchain/contracts"
 )
 
 func main() {
-	if len(os.Args) != 2 {
-		fmt.Fprintf(os.Stderr, "specify private key")
+	if err := run(); err != nil {
+		fmt.Fprintln(os.Stderr, "Error:", err)
 		os.Exit(1)
 	}
+}
 
-	prvkey := os.Args[1]
-	deploy := rootchain.NewDeploy(prvkey)
-
-	if err := deploy.Dial("http://localhost:8545"); err != nil {
-		fmt.Fprintf(os.Stderr, err.Error())
-		return
+func run() error {
+	if len(os.Args) < 2 {
+		return errors.New("Specify a subcommand")
 	}
 
-	addr, err := deploy.Deploy(contract.RootChainABI, contract.RootChainBin)
-	if err != nil {
-		fmt.Fprintf(os.Stderr, err.Error())
-		os.Exit(1)
+	switch os.Args[1] {
+	case "deploy":
+		if len(os.Args) != 3 {
+			return errors.New("Specify private key")
+		}
+
+		prvkey := os.Args[2]
+		deploy := rootchain.NewDeploy(prvkey)
+
+		if err := deploy.Dial("http://localhost:8545"); err != nil {
+			return err
+		}
+
+		addr, err := deploy.Deploy(contract.RootChainABI, contract.RootChainBin)
+		if err != nil {
+			return err
+		}
+
+		fmt.Println(addr.String())
+
+	default:
+		return errors.Errorf("does not support %q", os.Args[1])
 	}
 
-	fmt.Println(addr.String())
+	return nil
 }
