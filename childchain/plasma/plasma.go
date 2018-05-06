@@ -7,7 +7,7 @@ import (
 	"github.com/ethereum/go-ethereum/common"
 	"github.com/ethereum/go-ethereum/ethclient"
 	"github.com/ethereum/go-ethereum/log"
-	contract "github.com/yuzushioh/go-plasmamvp/contracts"
+	contract "github.com/yuzushioh/go-plasmamvp/rootchain/contracts"
 )
 
 // Plasma defines fields necessary for plasma.

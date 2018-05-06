@@ -7,7 +7,9 @@ import (
 	"os"
 	"strconv"
 
+	"github.com/ethereum/go-ethereum/common"
 	"github.com/pkg/errors"
+	"github.com/yuzushioh/go-plasmamvp/childchain/plasma"
 	"github.com/yuzushioh/go-plasmamvp/client"
 	"github.com/yuzushioh/go-plasmamvp/lib"
 	"github.com/yuzushioh/go-plasmamvp/rootchain"
@@ -15,10 +17,24 @@ import (
 )
 
 func main() {
+	contAddr := os.Getenv("CONTRACT_ADDRESS")
+	plasma := plasma.NewPlasma(common.HexToAddress(contAddr))
+
+	if err := plasma.Dial("ws://localhost:8545"); err != nil {
+		fmt.Fprintln(os.Stderr, "Error:", err)
+		os.Exit(1)
+	}
+
+	if err := plasma.WatchDeposit(context.Background()); err != nil {
+		fmt.Fprintln(os.Stderr, "Error:", err)
+		os.Exit(1)
+	}
+
 	if err := run(); err != nil {
 		fmt.Fprintln(os.Stderr, "Error:", err)
 		os.Exit(1)
 	}
+
 }
 
 func run() error {
