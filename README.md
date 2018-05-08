@@ -17,7 +17,7 @@ export PRIVATE_KEY=[Private Key] // use one in ganache-cli
 export CONTRACT_ADDRESS=$(plasma deploy)
 ```
 
-## Cli Usage
+## CLI Usage
 
 `plasma` is a simple CLI that enables you to interact with Plasma chain.
 
@@ -28,3 +28,9 @@ You can deposit eth to root chain contract. it uses an address derived from prov
 ```
 plasma deposit [AMOUNT]
 ```
+
+## Author
+this project is being developed by
+Kensuke Sano [@sonatard]()
+Ryo Fukuda [@yuzushioh]()
+Shota Yamamoto [@yamashou]()
