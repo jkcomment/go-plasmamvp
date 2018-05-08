@@ -1,19 +1,30 @@
-# go-plasmamvp
+# Plasma MVP
+This is a WIP [plasma mvp](https://ethresear.ch/t/minimal-viable-plasma/426) implementation in Go. We are learning plasma by trying to implement.
 
-## Install
+## Getting Started
+
+1. Install [ganache-cli](https://github.com/trufflesuite/ganache-cli) for a local blockchani netwrok.
+2. Build command line tool for plasma mvp
+
+```sh
+make install
+```
+
+3. Run following commands
 
 ```
-go get -u github.com/yuzushioh/go-plasmamvp/cmd/plasma
-```
-
-## Usage
-
-```
-export PRIVATE_KEY=[Private Key]
+export PRIVATE_KEY=[Private Key] // use one in ganache-cli
 export CONTRACT_ADDRESS=$(plasma deploy)
+```
 
-# plasma deposit, submitblock and withdraw use CONTRACT_ADDRESS environment
+## Cli Usage
+
+`plasma` is a simple CLI that enables you to interact with Plasma chain.
+
+### Deposit
+
+You can deposit eth to root chain contract. it uses an address derived from provided private key above.
+
+```
 plasma deposit [AMOUNT]
-plasma submitblock ?
-plasma withdraw ?
 ```
