@@ -31,6 +31,9 @@ plasma deposit [AMOUNT]
 
 ## Author
 this project is being developed by
-Kensuke Sano [@sonatard]()
-Ryo Fukuda [@yuzushioh]()
-Shota Yamamoto [@yamashou]()
+
+Kensuke Sano [@sonatard](https://twitter.com/sonatard)
+
+Ryo Fukuda [@yuzushioh](https://twitter.com/yuzushioh)
+
+Shota Yamamoto [@Yamashou](https://twitter.com/Yamashou0314)
