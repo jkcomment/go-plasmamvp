@@ -3,7 +3,7 @@ package plasma
 import (
 	"fmt"
 
-	contract "github.com/yuzushioh/go-plasmamvp/rootchain/contracts"
+	contract "github.com/D-Technologies/go-plasmamvp/bindings"
 )
 
 // ChildChain TODO

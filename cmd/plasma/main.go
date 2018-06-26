@@ -7,13 +7,11 @@ import (
 	"os"
 	"strconv"
 
+	"github.com/D-Technologies/go-plasmamvp/client"
+	"github.com/D-Technologies/go-plasmamvp/lib"
+	"github.com/D-Technologies/go-plasmamvp/plasma"
 	"github.com/ethereum/go-ethereum/common"
 	"github.com/pkg/errors"
-	"github.com/yuzushioh/go-plasmamvp/childchain/plasma"
-	"github.com/yuzushioh/go-plasmamvp/client"
-	"github.com/yuzushioh/go-plasmamvp/lib"
-	"github.com/yuzushioh/go-plasmamvp/rootchain"
-	contract "github.com/yuzushioh/go-plasmamvp/rootchain/contracts"
 )
 
 func main() {
@@ -51,24 +49,6 @@ func run() error {
 	subCmd := os.Args[1]
 
 	switch subCmd {
-	case "deploy":
-		if len(os.Args) != 2 {
-			return errors.New("usage: plasma deploy")
-		}
-
-		deploy := rootchain.NewDeploy(prvkey)
-
-		if err := deploy.Dial("http://localhost:8545"); err != nil {
-			return err
-		}
-
-		addr, err := deploy.Deploy(contract.RootChainABI, contract.RootChainBin)
-		if err != nil {
-			return err
-		}
-
-		fmt.Println(addr.String())
-
 	case "deposit":
 		contAddr := os.Getenv("CONTRACT_ADDRESS")
 

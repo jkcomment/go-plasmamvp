@@ -3,11 +3,11 @@ package plasma
 import (
 	"context"
 
+	"github.com/D-Technologies/go-plasmamvp/bindings"
 	"github.com/ethereum/go-ethereum/accounts/abi/bind"
 	"github.com/ethereum/go-ethereum/common"
 	"github.com/ethereum/go-ethereum/ethclient"
 	"github.com/ethereum/go-ethereum/log"
-	contract "github.com/yuzushioh/go-plasmamvp/rootchain/contracts"
 )
 
 // Plasma defines fields necessary for plasma.
@@ -39,7 +39,7 @@ func (p *Plasma) Dial(rawURL string) error {
 
 // WatchDeposit watches root chain for the deposit event.
 func (p *Plasma) WatchDeposit(ctx context.Context) error {
-	filterer, err := contract.NewRootChainFilterer(p.contractAddr, p.con)
+	filterer, err := bindings.NewRootChainFilterer(p.contractAddr, p.con)
 	if err != nil {
 		return err
 	}
@@ -49,7 +49,7 @@ func (p *Plasma) WatchDeposit(ctx context.Context) error {
 		Context: ctx,
 	}
 
-	sink := make(chan *contract.RootChainDeposit)
+	sink := make(chan *bindings.RootChainDeposit)
 	sub, err := filterer.WatchDeposit(opts, sink)
 	if err != nil {
 		return err

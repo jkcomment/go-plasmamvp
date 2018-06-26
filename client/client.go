@@ -4,17 +4,17 @@ import (
 	"context"
 	"math/big"
 
+	"github.com/D-Technologies/go-plasmamvp/bindings"
+	"github.com/D-Technologies/go-plasmamvp/lib"
 	"github.com/ethereum/go-ethereum/accounts/abi/bind"
 	"github.com/ethereum/go-ethereum/common"
 	"github.com/ethereum/go-ethereum/core/types"
 	"github.com/ethereum/go-ethereum/ethclient"
-	"github.com/yuzushioh/go-plasmamvp/lib"
-	contract "github.com/yuzushioh/go-plasmamvp/rootchain/contracts"
 )
 
 // Client call api for RootChain
 type Client struct {
-	RootChain *contract.RootChain
+	RootChain *bindings.RootChain
 	Auth      *bind.TransactOpts
 }
 
@@ -25,7 +25,7 @@ func New(url, contAddr, prvKey string) (*Client, error) {
 		return nil, err
 	}
 
-	rc, err := contract.NewRootChain(common.HexToAddress(contAddr), conn)
+	rc, err := bindings.NewRootChain(common.HexToAddress(contAddr), conn)
 	if err != nil {
 		return nil, err
 	}
